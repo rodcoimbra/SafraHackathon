@@ -122,7 +122,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cluster.cs" />
+    <Compile Include="Cluster\Cluster.cs" />
     <Compile Include="Communication\SafraAPIsComm.cs" />
     <Compile Include="Model\Client\ClientAccount.cs" />
     <Compile Include="Model\Report\Email.cs" />
@@ -149,6 +149,19 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Cluster\Config\00-Criacao_Dataset_Modelagem_KMeans.ipynb" />
+    <None Include="Cluster\Config\01-Criacao_Executavel.ipynb" />
+    <None Include="Cluster\Config\02-Arquivo_conf_ini.ipynb" />
+    <None Include="Cluster\Config\BaseDados2.ipynb" />
+    <Content Include="Cluster\Config\config.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Cluster\Config\Kmeans.sav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Cluster\Config\LICENSE" />
+    <None Include="Cluster\Config\model.py" />
+    <None Include="Cluster\Config\README.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -191,6 +204,11 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Cluster\Config\model.exe" />
+    <Content Include="Cluster\Config\requeriments.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

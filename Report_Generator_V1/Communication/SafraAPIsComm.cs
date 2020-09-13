@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MySql.Data.MySqlClient.Memcached;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Report_Generator_V1.Model;
 using Report_Generator_V1.Model.TransactionData;
@@ -13,9 +14,9 @@ namespace Report_Generator_V1.Communication
 {
     public class SafraAPIsComm
     {
-        public Root TransactionRq(string token)
+        public Root TransactionRq(string token, string clientEndpoint)
         {
-            var client = new RestClient("https://af3tqle6wgdocsdirzlfrq7w5m.apigateway.sa-saopaulo-1.oci.customer-oci.com/fiap-sandbox/open-banking/v1/accounts/00711234511/transactions");
+            var client = new RestClient(clientEndpoint);
             client.Timeout = -1;
             var request = new RestRequest(Method.GET);
             string separator = "\":\"";

@@ -20,17 +20,17 @@ namespace Report_Generator_V1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Database db = new Database();
-            ReturnStructure returnstructure = db.Get_Accounts();
+            //Database db = new Database();
+            //ReturnStructure returnstructure = db.Get_Accounts();
 
-            if (returnstructure.Status)
-            {
+            //if (returnstructure.Status)
+            //{
 
-                List<Account> a = (List<Account>)returnstructure.Data;
+            //    List<Account> a = (List<Account>)returnstructure.Data;
 
-                Excel excel = new Excel();
-                excel.Create_Report(a, @"C:\Users\luiz-pc\Desktop\teste.xlsx");
-            }
+            //    Excel excel = new Excel();
+            //    excel.Create_Report(a, @"C:\Users\luiz-pc\Desktop\teste.xlsx");
+            //}
 
         }
     }
