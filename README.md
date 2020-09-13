@@ -46,11 +46,23 @@ Microsoft.Office.Interop.Excel;
 System.Drawing;
 System.Linq;
 
-### Issues no GitHub
-<<<<<<< Updated upstream
-Podem ser abertos [Issues](https://github.com/rodcoimbra/SafraHackathon) no GitHub do Time 5. 
-=======
+### Disclaimer
 
-Podem ser abertos (https://github.com/rodcoimbra/SafraHackathon) no GitHub do Time 5. 
->>>>>>> Stashed changes
+Isso não é um produto oficial do banco Safra.
+
+A previsão de Saúde financeira de clientes é uma projeto utilizando um dataset financeiro sintético para treino, fruto de um hackathon promovido pelo banco safra para o processo seletivo de Technee.
+
+### Time 5
+
+- Alexandre França
+- Guilhemo Valdez
+- Luiz Guilherme Motta
+- Nicolas Sathler de Araujo
+- Rodrigo Coimbra
+
+
+### Issues no GitHub
+
+Podem ser abertos [Issues](https://github.com/rodcoimbra/SafraHackathon) no GitHub do Time 5. 
+
 
