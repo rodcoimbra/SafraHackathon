@@ -1,14 +1,7 @@
-﻿using MySql.Data.MySqlClient.Memcached;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Report_Generator_V1.Model;
+﻿using Newtonsoft.Json;
 using Report_Generator_V1.Model.TransactionData;
 using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Report_Generator_V1.Communication
 {

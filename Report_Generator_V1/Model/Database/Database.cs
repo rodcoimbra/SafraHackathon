@@ -1,11 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
-using Report_Generator_V1.Properties;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Report_Generator_V1.Model.Database
 {
@@ -174,7 +171,4 @@ namespace Report_Generator_V1.Model.Database
         public Boolean Status { get; set; }
         public IEnumerable<object> Data { get; set; }
     }
-
-
-
 }

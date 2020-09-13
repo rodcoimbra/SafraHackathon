@@ -3,13 +3,9 @@ using Report_Generator_V1.Model.Client;
 using Report_Generator_V1.Model.Report;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Report_Generator_V1.Model.Database;
-using Ubiety.Dns.Core.Records.NotUsed;
 using System.Configuration;
-using System.Text;
 using System.IO;
 
 namespace Report_Generator_V1
