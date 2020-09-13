@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -14,22 +15,46 @@ namespace Report_Generator_V1.Model.Report
         {
             try
             {
-                MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress("your_email_address@gmail.com");
-                mail.To.Add("to_address");
-                mail.Subject = "Test Mail - 1";
-                mail.Body = "mail with attachment";
+                var fromAddress = new MailAddress(ConfigurationManager.AppSettings["emailLogin"], "From Name");
+                var toAddress = new MailAddress(ConfigurationManager.AppSettings["emailLogin"], "To Name");
+                int qtd_emails = Int16.Parse(ConfigurationManager.AppSettings["qtdEmail"]);
 
-                System.Net.Mail.Attachment attachment;
-                attachment = new System.Net.Mail.Attachment("your attachment excelFile");
-                mail.Attachments.Add(attachment);
+                const string fromPassword = "safra123abc";
+                const string subject = "teste com attachment";
+                const string body = "Hey now!!";
 
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new System.Net.NetworkCredential("username", "password");
-                SmtpServer.EnableSsl = true;
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                    Timeout = 20000
+                };
 
-                SmtpServer.Send(mail);
+
+
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body,
+
+
+                })
+                {
+                    System.Net.Mail.Attachment attachment;
+                    attachment = new System.Net.Mail.Attachment(excelFile);
+                    message.Attachments.Add(attachment);
+
+                    for (int i = 0; i < qtd_emails; i++)
+                    {
+                        message.CC.Add(ConfigurationManager.AppSettings[String.Format("email{0}", i)]);
+                    }
+
+
+                    smtp.Send(message);
+                }
             }
             catch (Exception ex)
             {
