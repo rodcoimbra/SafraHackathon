@@ -17,11 +17,12 @@ namespace Report_Generator_V1.Model.Report
             {
                 var fromAddress = new MailAddress(ConfigurationManager.AppSettings["emailLogin"], "From Name");
                 var toAddress = new MailAddress(ConfigurationManager.AppSettings["emailLogin"], "To Name");
-                int qtd_emails = Int16.Parse(ConfigurationManager.AppSettings["qtdEmail"]);
+                int qtd_emails = Int16.Parse(ConfigurationManager.AppSettings["qtdEmails"]);
 
-                const string fromPassword = "safra123abc";
-                const string subject = "teste com attachment";
-                const string body = "Hey now!!";
+                string fromPassword = ConfigurationManager.AppSettings["emailSenha"];
+                string subject = "Relatório - previsão de saúde financeira " + DateTime.Now.ToString("dd-MM-yyyy hh:mm");
+                
+                const string body = "Caro,\n\nRelatório em anexo.\n\nAtenciosamente.";
 
                 var smtp = new SmtpClient
                 {

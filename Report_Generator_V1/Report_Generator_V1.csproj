@@ -154,10 +154,10 @@
     <None Include="Cluster\Config\02-Arquivo_conf_ini.ipynb" />
     <None Include="Cluster\Config\BaseDados2.ipynb" />
     <Content Include="Cluster\Config\config.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Cluster\Config\Kmeans.sav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Cluster\Config\LICENSE" />
     <None Include="Cluster\Config\model.py" />

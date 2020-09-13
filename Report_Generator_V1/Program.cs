@@ -92,8 +92,7 @@ namespace Report_Generator_V1
             var pyScript = new Cluster();
             pyScript.RunClusterAlgorithm();
 
-
-            String exe_location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            String exe_location = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             await Task.Run(() => returnstructure = db.Get_Accounts());
             if (returnstructure.Status)
             {
@@ -107,9 +106,7 @@ namespace Report_Generator_V1
 
             }
 
-
             //Envio do e-mail
-
             var email = new Email();
             email.SendEmail(Path.Combine(exe_location, @"teste.xlsx"));
 
