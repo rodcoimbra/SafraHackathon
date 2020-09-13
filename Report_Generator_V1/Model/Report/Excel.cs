@@ -13,16 +13,31 @@ namespace Report_Generator_V1.Model.Report
 {
     class Excel
     {
+        //CREATE DICT WITH REFERECENCE FOR EACH CLUSTER
+        //---------------------------------------------
+        Dictionary<String, Color> dict_colors = new Dictionary<string, Color>() {
+            { "Risco iminente de inadimplência", Color.FromArgb(123, 123, 123) },
+            { "Possível investidor", Color.FromArgb(201, 175, 109) },
+            { "Investidor", Color.FromArgb(181, 142, 65) },
+            { "Risco iminente de inadimplência0", Color.FromArgb(123, 123, 123) },
+            { "Risco iminente de inadimplência1", Color.FromArgb(123, 123, 123) },
+            { "Risco iminente de inadimplência2", Color.FromArgb(123, 123, 123) },
+            { "Risco iminente de inadimplência3", Color.FromArgb(123, 123, 123) }
+        };
+
+
         public void Create_Report(List<Account> data, string save_path)
         {
-            Microsoft.Office.Interop.Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
-
+            Microsoft.Office.Interop.Excel.Application xlApp = null;
             Workbook xlBook = null;
             Sheets xlSheets;
             int indexSheet = 1;
 
             try
             {
+                //OPEN EXCEL, CREATE WKBOOK
+                //--------------------------
+                xlApp = new Microsoft.Office.Interop.Excel.Application();
                 xlBook = xlApp.Workbooks.Add();
                 xlSheets = xlBook.Sheets;
                 xlApp.Visible = true;
@@ -36,13 +51,16 @@ namespace Report_Generator_V1.Model.Report
 
             try
             {
+                //CREATE SHEETS
+                //-------------
                 Worksheet xlSheet_listagem = (Worksheet)xlSheets.Add(xlSheets[indexSheet], Type.Missing, Type.Missing);
                 xlSheet_listagem.Name = "listagem_formulas";
 
                 Worksheet xlSheet_resume = (Worksheet)xlSheets.Add(xlSheets[indexSheet], Type.Missing, Type.Missing);
                 xlSheet_resume.Name = "resumo_consolidado";
 
-                if (!Create_Header(xlSheet_resume))
+
+                if (!Configure_Resume_Sheet(xlSheet_resume))
                 {
                     xlSheet_listagem.Delete();
                     Exit_Excel(xlBook, xlApp);
@@ -75,13 +93,15 @@ namespace Report_Generator_V1.Model.Report
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error creating new sheet in workbook:\n" + ex.Message, "Error building Excel sheet", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error creating sheets in workbook:\n" + ex.Message, "Error building Excel sheet", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Exit_Excel(xlBook, xlApp);
                 return;
             }
 
             try
             {
+                //SAVE EXCEL WORKBOOK
+                //-------------------
                 xlApp.DisplayAlerts = false;
                 xlBook.SaveAs(save_path, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing,
                                 XlSaveAsAccessMode.xlNoChange, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
@@ -95,53 +115,62 @@ namespace Report_Generator_V1.Model.Report
             finally
             {
                 Exit_Excel(xlBook, xlApp);
-
             }
 
             return;
         }
 
-        private Boolean Create_Header(Worksheet xlSheet)
+        private Boolean Configure_Resume_Sheet(Worksheet xlSheet)
         {
+            Range aux_range;
+            int lastCol = xlSheet.Columns.Count;
+            int lastRow = xlSheet.Rows.Count;
 
             try
             {
-
-
                 xlSheet.Cells[1, 1] = "RESUMO CONSOLIDADO DE PREVISÃO DE SAÚDE FINANCEIRA";
-
-
-                Range aux_range;
 
                 for (int i = 1; i <= 12; i++)
                 {
                     aux_range = xlSheet.Columns[i];
-                    aux_range.Interior.Color = Color.FromArgb(123, 123, 123);
+                    aux_range.Interior.Color = Color.FromArgb(191, 191, 191);
                 }
 
+                //SHOW JUST THE CORRECT COLUMNS
+                //-----------------------------
+                aux_range = xlSheet.Range[xlSheet.Cells[1, 13], xlSheet.Cells[lastRow, lastCol]];
+                aux_range.EntireColumn.Hidden = true;
+
+                //MERGE TITLE
+                //-----------
                 aux_range = xlSheet.Range[xlSheet.Cells[1, 1], xlSheet.Cells[7, 12]];
                 aux_range.Merge();
 
+                //TITLE ALLIGNMENT (NOT WORKING)
+                //------------------------------
                 aux_range.HorizontalAlignment = HorizontalAlignment.Center;
                 aux_range.VerticalAlignment = VerticalAlignment.Center;
 
-                aux_range.Interior.Color = Color.FromArgb(123, 123, 123);
-                aux_range.Font.Color = Color.FromArgb(1, 123, 123);
+                //TITLE COLORS
+                //-----------
+                aux_range.Interior.Color = Color.FromArgb(30, 36, 70);
+                aux_range.Font.Color = Color.FromArgb(181, 142, 65);
                 aux_range.Font.Size = 18;
 
                 aux_range = xlSheet.Range[xlSheet.Cells[8, 1], xlSheet.Cells[8, 12]];
                 aux_range.Merge();
-                aux_range.Interior.Color = Color.FromArgb(123, 123, 123);
+                aux_range.Interior.Color = Color.FromArgb(38, 38, 38);
 
                 aux_range = xlSheet.Range[xlSheet.Cells[9, 1], xlSheet.Cells[9, 12]];
-                aux_range.Interior.Color = Color.FromArgb(123, 123, 123);
+                aux_range.Interior.Color = Color.FromArgb(38, 38, 38);
                 aux_range.Font.Color = Color.FromArgb(255, 255, 255);
                 aux_range.Font.Size = 8;
+                aux_range.Font.FontStyle = FontStyle.Bold;
 
             }
             catch (Exception)
             {
-                MessageBox.Show("Could not build header for the sheet.", "Error Building Excel Sheet", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Could not build resume sheet.", "Error Building resume Sheet", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true;
@@ -150,6 +179,8 @@ namespace Report_Generator_V1.Model.Report
         private Boolean Insert_Data(Worksheet xlSheet, List<Account> data)
         {
 
+            //CREATE HEADERS FOR DATA 'TABLE' AND ADD BORDER
+            //----------------------------------------------
             try
             {
                 xlSheet.Cells[1, 1] = "ACCOUNT";
@@ -169,7 +200,8 @@ namespace Report_Generator_V1.Model.Report
                 return false;
             }
 
-
+            //INSERT DATA AND ADD BORDER
+            //--------------------------
             try
             {
                 for (int i = 0; i < data.Count; i++)
@@ -187,11 +219,6 @@ namespace Report_Generator_V1.Model.Report
                     xlSheet.Cells[i + 2, 5] = row.time_exec;
                     ((Range)xlSheet.Cells[i + 2, 5]).BorderAround2();
 
-
-                    //for(int j = 0;j< row.Account_fields_count; j++)
-                    //{
-                    //    xlSheet.Cells[i+2,j+1] = row[i].ToString();
-                    //}
                 }
             }
             catch (Exception ex)
@@ -208,15 +235,14 @@ namespace Report_Generator_V1.Model.Report
 
             int first_column = data[0].Account_fields_count + 2;
             int index = 0;
-            //neutro  //investidor  //Risco iminente  //risco 2  //Possivel  //Risco 1
-            Color[] grad_colors = new Color[]{Color.FromArgb(247, 222, 220), Color.FromArgb(181, 142, 65), Color.FromArgb(192, 0, 0),
-                                   Color.FromArgb(247, 1, 220), Color.FromArgb(2, 222, 220), Color.FromArgb(3, 222, 220) };
+            List<Color> grad_colors = new List<Color>();
 
             Dictionary<String, int> clusters = new Dictionary<string, int>();
 
             try
             {
-
+                //GET CLUSTERS TO DATA AND SET THE RIGHT COLORS TO LIST IN ORDER 
+                //-----------------------------------------------------------
                 for (int i = 0; i < data.Count; i++)
                 {
                     Account row = data[i];
@@ -224,13 +250,17 @@ namespace Report_Generator_V1.Model.Report
                     if (!clusters.ContainsKey(row.Cluster))
                     {
                         clusters.Add(row.Cluster, index++);
+                        grad_colors.Add(dict_colors[row.Cluster]);
                     }
                 }
 
+                //HEADER
+                //------
                 index = 0;
                 xlSheetData.Cells[1, index + first_column] = "Relação de Entrada (IN) e Saída (OUT) de contas PF Banco Safra";
                 xlSheetData.Cells[2, index + first_column] = "IN";
                 ((Range)xlSheetData.Cells[2, index + first_column]).BorderAround2();
+
                 foreach (string key in clusters.Keys)
                 {
                     xlSheetData.Cells[2, ++index + first_column] = key;
@@ -285,7 +315,7 @@ namespace Report_Generator_V1.Model.Report
             {
 
                 var charts = xlSheetchart.ChartObjects() as Microsoft.Office.Interop.Excel.ChartObjects;
-                var chartObject = charts.Add(5, 160, 565, 300) as Microsoft.Office.Interop.Excel.ChartObject;
+                var chartObject = charts.Add(5, 470, 565, 300) as Microsoft.Office.Interop.Excel.ChartObject;
                 var chart = chartObject.Chart;
 
                 // Set chart range.
@@ -305,7 +335,7 @@ namespace Report_Generator_V1.Model.Report
                 {
 
                     chart.FullSeriesCollection(i).Select();
-                    xlApp.Selection.Format.Line.Visible = true;
+                    //xlApp.Selection.Format.Line.Visible = true;
                     xlApp.Selection.Format.Line.ForeColor.RGB = grad_colors[i - 1];
 
                     xlApp.Selection.Format.Fill.Visible = true;
@@ -332,8 +362,7 @@ namespace Report_Generator_V1.Model.Report
         {
 
             int index = 0;
-            Color[] grad_colors = new Color[]{Color.FromArgb(247, 222, 220), Color.FromArgb(181, 142, 65), Color.FromArgb(192, 0, 0),
-                                   Color.FromArgb(247, 1, 220), Color.FromArgb(2, 222, 220), Color.FromArgb(3, 222, 220) };
+            List<Color> grad_colors = new List<Color>();
 
             Dictionary<String, int> clusters = new Dictionary<string, int>();
             Dictionary<String, double> percentage = new Dictionary<string, double>();
@@ -345,6 +374,7 @@ namespace Report_Generator_V1.Model.Report
                 if (!clusters.ContainsKey(row.Cluster))
                 {
                     clusters.Add(row.Cluster, index++);
+                    grad_colors.Add(dict_colors[row.Cluster]);
                 }
             }
 
@@ -402,7 +432,7 @@ namespace Report_Generator_V1.Model.Report
             {
 
                 var charts = xlSheetchart.ChartObjects() as Microsoft.Office.Interop.Excel.ChartObjects;
-                var chartObject = charts.Add(5, 470, 565, 300) as Microsoft.Office.Interop.Excel.ChartObject;
+                var chartObject = charts.Add(5, 160, 565, 300) as Microsoft.Office.Interop.Excel.ChartObject;
                 var chart = chartObject.Chart;
 
                 // Set chart range.
