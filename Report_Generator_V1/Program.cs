@@ -65,11 +65,11 @@ namespace Report_Generator_V1
 
                     if (creditDebitInfo.Equals("Credit", StringComparison.OrdinalIgnoreCase))
                     {
-                        client_in += Double.Parse(transactionAmount);
+                        client_in += Double.Parse(transactionAmount, System.Globalization.CultureInfo.InvariantCulture);
                     }
                     else if (creditDebitInfo.Equals("Debit", StringComparison.OrdinalIgnoreCase))
                     {
-                        client_out += Double.Parse(transactionAmount);
+                        client_out += Double.Parse(transactionAmount, System.Globalization.CultureInfo.InvariantCulture);
                     }
                 }
 
