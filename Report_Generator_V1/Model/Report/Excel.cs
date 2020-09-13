@@ -16,13 +16,12 @@ namespace Report_Generator_V1.Model.Report
         //CREATE DICT WITH REFERECENCE FOR EACH CLUSTER
         //---------------------------------------------
         Dictionary<String, Color> dict_colors = new Dictionary<string, Color>() {
-            { "Risco iminente de inadimplência", Color.FromArgb(123, 123, 123) },
+            { "Risco iminente de inadimplência", Color.FromArgb(255, 64, 64) },
             { "Possível investidor", Color.FromArgb(201, 175, 109) },
             { "Investidor", Color.FromArgb(181, 142, 65) },
-            { "Risco iminente de inadimplência0", Color.FromArgb(123, 123, 123) },
-            { "Risco iminente de inadimplência1", Color.FromArgb(123, 123, 123) },
-            { "Risco iminente de inadimplência2", Color.FromArgb(123, 123, 123) },
-            { "Risco iminente de inadimplência3", Color.FromArgb(123, 123, 123) }
+            { "Neutro", Color.FromArgb(247, 222, 220) },
+            { "Risco de inadimplência 1", Color.FromArgb(255, 191, 191) },
+            { "Risco de inadimplência 2", Color.FromArgb(255, 222, 220) }
         };
 
 
@@ -40,7 +39,7 @@ namespace Report_Generator_V1.Model.Report
                 xlApp = new Microsoft.Office.Interop.Excel.Application();
                 xlBook = xlApp.Workbooks.Add();
                 xlSheets = xlBook.Sheets;
-                xlApp.Visible = true;
+                xlApp.Visible = false;
             }
             catch (Exception ex)
             {

@@ -99,7 +99,7 @@ namespace Report_Generator_V1
                 List<Account> list_of_accounts = (List<Account>)returnstructure.Data;
 
                 Excel excel = new Excel();
-                await Task.Run(() => excel.Create_Report(list_of_accounts, Path.Combine(exe_location, @"teste.xlsx")));
+                await Task.Run(() => excel.Create_Report(list_of_accounts, Path.Combine(exe_location, @"relatorio saude financeira.xlsx")));
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -108,7 +108,7 @@ namespace Report_Generator_V1
 
             //Envio do e-mail
             var email = new Email();
-            email.SendEmail(Path.Combine(exe_location, @"teste.xlsx"));
+            email.SendEmail(Path.Combine(exe_location, @"relatorio saude financeira.xlsx"));
 
         }
 
