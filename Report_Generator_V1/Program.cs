@@ -9,6 +9,8 @@ using System.Windows.Forms;
 using Report_Generator_V1.Model.Database;
 using Ubiety.Dns.Core.Records.NotUsed;
 using System.Configuration;
+using System.Text;
+using System.IO;
 
 namespace Report_Generator_V1
 {
@@ -16,6 +18,9 @@ namespace Report_Generator_V1
     {
         public static async Task Main()
         {
+
+            List<Account> list_accounts = new List<Account>();
+
             //Acesso às APIs
             var clients = new List<ClientAccount>();
 
@@ -46,6 +51,9 @@ namespace Report_Generator_V1
                 string insertCreditQuery = String.Empty;
                 string insertDebitQuery = String.Empty;
 
+                double client_in = 0;
+                double client_out = 0;
+
                 foreach (var item in json.Data.Transaction)
                 {
                     //info da transação
@@ -54,53 +62,56 @@ namespace Report_Generator_V1
                     transactionAmount = item.Amount._Amount;
                     creditDebitInfo = item.CreditDebitIndicator;
 
-                    //transacao sumarizada ao total
-                    balanceAmount = item.Balance.Amount.Amount;
-                    balanceCreditDebitInfo = item.Balance.CreditDebitIndicator;
+
+                    if (creditDebitInfo.Equals("Credit", StringComparison.OrdinalIgnoreCase))
+                    {
+                        client_in += Double.Parse(transactionAmount);
+                    }
+                    else if (creditDebitInfo.Equals("Debit", StringComparison.OrdinalIgnoreCase))
+                    {
+                        client_out += Double.Parse(transactionAmount);
+                    }
                 }
 
-                ////INSERT Queries
-                //if (creditDebitInfo.Equals("Credit"))
-                //    insertCreditQuery = String.Format("INSERT INTO `safra.transferencias`(conta, entrada, saida) VALUES({0}, {1}, {2});", accountId, transactionAmount, "0.00");
+                Account account = new Account();
+                account.Balance_in = client_in;
+                account.Balance_out = client_out;
+                account.Description = accountId;
 
-                //if (creditDebitInfo.Equals("Debit"))
-                //    insertDebitQuery = String.Format("INSERT INTO `safra.transferencias`(conta, entrada, saida) VALUES({0}, {1}, {2});", accountId, "0.00", transactionAmount);
+                list_accounts.Add(account);
             }
 
+            Database db = new Database();
+            ReturnStructure returnstructure = new ReturnStructure();
 
+            await Task.Run(() => returnstructure = db.Set_Accounts(list_accounts));
 
 
             //Run no algoritmo de "clusterização"
-
+            //-----------------------------------
             var pyScript = new Cluster();
             pyScript.RunClusterAlgorithm();
 
-            //
 
-
-
-            //Geração do relatorio
-            ReturnStructure returnstructure = new ReturnStructure();
-
-            Database db = new Database();
+            String exe_location = System.Reflection.Assembly.GetEntryAssembly().Location;
             await Task.Run(() => returnstructure = db.Get_Accounts());
-
             if (returnstructure.Status)
             {
                 List<Account> list_of_accounts = (List<Account>)returnstructure.Data;
 
                 Excel excel = new Excel();
-                await Task.Run(() => excel.Create_Report(list_of_accounts, @"C:\Users\luiz-pc\Desktop\teste.xlsx"));
+                await Task.Run(() => excel.Create_Report(list_of_accounts, Path.Combine(exe_location, @"teste.xlsx")));
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
 
             }
 
+
             //Envio do e-mail
 
             var email = new Email();
-            email.SendEmail("excelFile");
+            email.SendEmail(Path.Combine(exe_location, @"teste.xlsx"));
 
         }
 
